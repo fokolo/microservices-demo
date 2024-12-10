@@ -1,0 +1,26 @@
+# This is just a dummy workflow
+# But it's a good example of how to setup a workflow which can run TF apply and so on...
+
+name: Setup dummy S3 bucket
+
+on:
+  workflow_dispatch:
+    inputs:
+      properties:
+        type: string
+        required: true
+        description: The form inputs
+
+jobs:
+  setup-dummy-s3-bucket:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup dummy S3 bucket
+        env:
+          WEBHOOK_URL: ${{ fromJson(inputs.properties).webhook_url }}
+          PAYLOAD: ${{ inputs.properties }}
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"name": "Port-Demo", "input": '"$PAYLOAD"'}' \
+            $WEBHOOK_URL
