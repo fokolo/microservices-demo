@@ -6,10 +6,18 @@ name: Setup dummy S3 bucket
 on:
   workflow_dispatch:
     inputs:
-      properties:
+      webhook_url:
         type: string
         required: true
-        description: The form inputs
+        description: The webhook URL
+      payload:
+        type: string
+        required: true
+        description: The payload to send to the webhook
+      port_context:
+        type: string
+        required: false
+        description: The Port context
 
 jobs:
   setup-dummy-s3-bucket:
@@ -17,8 +25,8 @@ jobs:
     steps:
       - name: Setup dummy S3 bucket
         env:
-          WEBHOOK_URL: ${{ fromJson(inputs.properties).webhook_url }}
-          PAYLOAD: ${{ inputs.properties }}
+          WEBHOOK_URL: ${{ inputs.webhook_url }}
+          PAYLOAD: ${{ inputs.payload }}
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
